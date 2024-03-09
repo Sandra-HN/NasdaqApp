@@ -5,7 +5,7 @@ const SplashScreen = ({ navigation }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       navigation.navigate("Explore");
-    }, 3000); // Adjust the delay as needed
+    }, 3000); 
 
     return () => clearTimeout(timer);
   }, [navigation]);
