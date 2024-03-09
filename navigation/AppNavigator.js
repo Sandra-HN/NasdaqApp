@@ -1,8 +1,8 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import ExploreScreen from "../screens/ExploreScreen";
-import StockDetailsScreen from "../screens/StockDetailsScreen";
 import SplashScreen from "../screens/SplashScreen";
+import LogoTitle from "./LogoTitle";
 
 const Stack = createStackNavigator();
 
@@ -17,9 +17,10 @@ const AppNavigator = () => {
       <Stack.Screen
         name="Explore"
         component={ExploreScreen}
-        options={{ headerShown: false }}
+        options={{ 
+          headerStyle:{backgroundColor: "#191A28",height:90},
+          headerLeft: props => <LogoTitle {...props} />,}}
       />
-      <Stack.Screen name="StockDetails" component={StockDetailsScreen} />
     </Stack.Navigator>
   );
 };
