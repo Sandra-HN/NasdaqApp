@@ -1,8 +1,12 @@
+import { NavigationContainer } from "@react-navigation/native";
 import * as Font from "expo-font";
 import React from "react";
-import { Text, View, ActivityIndicator } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { ActivityIndicator, View } from "react-native";
+import { QueryClient, QueryClientProvider } from "react-query";
 import AppNavigator from "./navigation/AppNavigator";
+
+const queryClient = new QueryClient();
+
 export default class App extends React.Component {
   state = {
     fontsLoaded: false,
@@ -12,7 +16,6 @@ export default class App extends React.Component {
     await Font.loadAsync({
       "DMSans-Regular": require("./assets/fonts/DMSans-Regular.ttf"),
     });
-
     this.setState({ fontsLoaded: true });
   }
 
@@ -32,10 +35,11 @@ export default class App extends React.Component {
         </View>
       );
     }
-
     return (
       <NavigationContainer>
-        <AppNavigator />
+        <QueryClientProvider client={queryClient}>
+          <AppNavigator />
+        </QueryClientProvider>
       </NavigationContainer>
     );
   }
