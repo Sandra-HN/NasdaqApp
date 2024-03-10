@@ -1,11 +1,16 @@
-import React, { useEffect } from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { StackNavigationProp } from '@react-navigation/stack';
+import React, { useEffect } from 'react';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
-const SplashScreen = ({ navigation }) => {
+interface Props {
+  navigation: StackNavigationProp<any>;
+}
+
+const SplashScreen: React.FC<Props> = ({ navigation }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.navigate("Explore");
-    }, 3000); 
+      navigation.navigate('Explore');
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, [navigation]);
@@ -13,7 +18,7 @@ const SplashScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Image
-        source={require("../assets/nasdaq-logo.png")}
+        source={require('../assets/nasdaq-logo.png')}
         style={styles.logo}
         resizeMode="contain"
       />
@@ -28,26 +33,26 @@ const SplashScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#1F202F",
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#1F202F',
   },
   logo: {
     width: 158,
     height: 45,
-    tintColor: "#FFFFFF",
+    tintColor: '#FFFFFF',
   },
   developerContainer: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 37,
   },
   developerName: {
     fontSize: 16,
-    fontWeight: "400",
+    fontWeight: '400',
     lineHeight: 21,
-    color: "#FFFFFF",
-    textAlign: "center",
-    fontFamily: "DMSans-Regular",
+    color: '#FFFFFF',
+    textAlign: 'center',
+    fontFamily: 'DMSans-Regular',
   },
 });
 

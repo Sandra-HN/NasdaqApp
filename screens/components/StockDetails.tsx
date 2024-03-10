@@ -1,5 +1,5 @@
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import React, { useState } from "react";
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import React, { RefObject, useState } from 'react';
 import {
   Image,
   ScrollView,
@@ -7,34 +7,61 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
+} from 'react-native';
+import MyWebView from './MyWebView';
+import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
+import getSymbolFromCurrency from 'currency-symbol-map';
+interface StockDetailsProps {
+  selectedStock: {
+    branding: {
+      icon_url: string;
+    };
+    ticker: string;
+    currency_name: string;
+    aggs: {
+      c: number;
+      o: number;
+      h: number;
+      l: number;
+    };
+    description: string;
+    homepage_url: string;
+    status: string;
+    priceChangePercentage: number;
+  } | null;
+  onClose: () => void;
+  bottomSheetModalRef: RefObject<BottomSheetModalMethods>;
+}
 
-import MyWebView from "./MyWebView";
-
-export default function StockDetails({
+const StockDetails: React.FC<StockDetailsProps> = ({
   selectedStock,
   onClose,
   bottomSheetModalRef,
-}) {
+}) => {
   const [openWebView, setOpenWebView] = useState(false);
 
   const handleCloseModal = () => {
-    bottomSheetModalRef.current?.dismiss();
+    bottomSheetModalRef?.current?.dismiss();
     setOpenWebView(false);
     onClose();
   };
+
   const openWebsite = () => {
-    if (selectedStock.homepage_url) {
+    if (selectedStock?.homepage_url) {
       setOpenWebView(true);
     }
   };
+  const currency_symbol = selectedStock?.currency_name
+    ? getSymbolFromCurrency(selectedStock?.currency_name?.toUpperCase()) ?? ''
+    : '';
+
   return (
     <BottomSheetModal
       ref={bottomSheetModalRef}
       index={0}
-      snapPoints={["92%"]}
-      handleStyle={{ backgroundColor: "#1F202F", height: 0, padding: 0 }}
-      backgroundStyle={{ backgroundColor: "#1F202F" }}
+      snapPoints={['92%']}
+      handleStyle={{ backgroundColor: '#1F202F', height: 0, padding: 0 }}
+      backgroundStyle={{ backgroundColor: '#1F202F' }}
       enablePanDownToClose={false}
       enableContentPanningGesture={false}
     >
@@ -62,12 +89,12 @@ export default function StockDetails({
                         </Text>
                       </View>
                     )}
-                    <View style={{ flexDirection: "column" }}>
+                    <View style={{ flexDirection: 'column' }}>
                       <Text style={styles.ticker}>{selectedStock.ticker}</Text>
-                      <View style={{ flexDirection: "row", gap: 5 }}>
-                        <Text style={[{ color: "#FFFFFF" }, styles.headerText]}>
-                          {selectedStock?.currency_symbol}
-                          {selectedStock?.aggs?.c}
+                      <View style={{ flexDirection: 'row', gap: 5 }}>
+                        <Text style={[{ color: '#FFFFFF' }, styles.headerText]}>
+                          {currency_symbol}
+                          {selectedStock?.aggs?.c?.toFixed(2)}
                         </Text>
                         <Text
                           style={[
@@ -75,10 +102,10 @@ export default function StockDetails({
                               color:
                                 selectedStock?.priceChangePercentage &&
                                 selectedStock?.priceChangePercentage > 0
-                                  ? "#22FF95"
+                                  ? '#22FF95'
                                   : selectedStock?.priceChangePercentage < 0
-                                  ? "#ff4270"
-                                  : "#aaaaaa",
+                                  ? '#ff4270'
+                                  : '#aaaaaa',
                             },
                             styles.headerText,
                           ]}
@@ -90,10 +117,10 @@ export default function StockDetails({
                   </View>
                   <TouchableOpacity
                     style={styles.closeButton}
-                    onPress={() => handleCloseModal()}
+                    onPress={handleCloseModal}
                   >
                     <Image
-                      source={require("../../assets/close.png")}
+                      source={require('../../assets/close.png')}
                       style={{ width: 10, height: 10 }}
                     />
                   </TouchableOpacity>
@@ -103,10 +130,7 @@ export default function StockDetails({
                   <View style={styles.bodyView}>
                     <Text
                       style={[
-                        {
-                          color: "#FFFFFF",
-                          height: 26,
-                        },
+                        { color: '#FFFFFF', height: 26 },
                         styles.headerText,
                       ]}
                     >
@@ -121,10 +145,7 @@ export default function StockDetails({
                 <View style={styles.statisticsView}>
                   <Text
                     style={[
-                      {
-                        color: "#FFFFFF",
-                        height: 26,
-                      },
+                      { color: '#FFFFFF', height: 26 },
                       styles.headerText,
                     ]}
                   >
@@ -132,102 +153,74 @@ export default function StockDetails({
                   </Text>
                   <View
                     style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
                     }}
                   >
-                    <View style={{ width: "45%" }}>
+                    <View style={{ width: '45%' }}>
                       <Text style={styles.statisticsTitle}>Open</Text>
-                      <Text
-                        style={[
-                          {
-                            color: "#FFFFFF",
-                          },
-                          styles.headerText,
-                        ]}
-                      >
-                        {selectedStock?.currency_symbol}
-                        {selectedStock?.aggs?.o}
+                      <Text style={[{ color: '#FFFFFF' }, styles.headerText]}>
+                        {currency_symbol}
+                        {selectedStock?.aggs?.o?.toFixed(2)}
                       </Text>
                     </View>
-                    <View style={{ width: "45%" }}>
+                    <View style={{ width: '45%' }}>
                       <Text style={styles.statisticsTitle}>Close</Text>
-                      <Text
-                        style={[
-                          {
-                            color: "#FFFFFF",
-                          },
-                          styles.headerText,
-                        ]}
-                      >
-                        {selectedStock?.currency_symbol}
-                        {selectedStock?.aggs?.c}
+                      <Text style={[{ color: '#FFFFFF' }, styles.headerText]}>
+                        {currency_symbol}
+                        {selectedStock?.aggs?.c?.toFixed(2)}
                       </Text>
                     </View>
                   </View>
                   <View
                     style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
                     }}
                   >
-                    <View style={{ width: "45%" }}>
+                    <View style={{ width: '45%' }}>
                       <Text style={styles.statisticsTitle}>High</Text>
-                      <Text
-                        style={[
-                          {
-                            color: "#FFFFFF",
-                          },
-                          styles.headerText,
-                        ]}
-                      >
-                        {selectedStock?.currency_symbol}
-                        {selectedStock?.aggs?.h}
+                      <Text style={[{ color: '#FFFFFF' }, styles.headerText]}>
+                        {currency_symbol}
+                        {selectedStock?.aggs?.h?.toFixed(2)}
                       </Text>
                     </View>
-                    <View style={{ width: "45%" }}>
+                    <View style={{ width: '45%' }}>
                       <Text style={styles.statisticsTitle}>Low</Text>
-                      <Text
-                        style={[
-                          {
-                            color: "#FFFFFF",
-                          },
-                          styles.headerText,
-                        ]}
-                      >
-                        {selectedStock?.currency_symbol}
-                        {selectedStock?.aggs?.l}
+                      <Text style={[{ color: '#FFFFFF' }, styles.headerText]}>
+                        {currency_symbol}
+                        {selectedStock?.aggs?.l?.toFixed(2)}
                       </Text>
                     </View>
                   </View>
                 </View>
               </View>
-              <View style={styles.websiteButtonView}>
-                <TouchableOpacity
-                  onPress={() => {
-                    openWebsite();
-                  }}
-                  style={styles.openWebsiteButton}
-                >
-                  <Text
-                    style={[
-                      {
-                        color: "#40AFFF",
-                        textAlign: "center",
-                        width: "100%",
-                      },
-                      styles.headerText,
-                    ]}
+              {selectedStock?.homepage_url && (
+                <View style={styles.websiteButtonView}>
+                  <TouchableOpacity
+                    onPress={openWebsite}
+                    style={styles.openWebsiteButton}
                   >
-                    Visit Website
-                  </Text>
-                </TouchableOpacity>
-              </View>
+                    <Text
+                      style={[
+                        {
+                          color: '#40AFFF',
+                          textAlign: 'center',
+                          width: '100%',
+                        },
+                        styles.headerText,
+                      ]}
+                    >
+                      Visit Website
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
           )}
         </ScrollView>
       </View>
-      {selectedStock && (
+      {selectedStock?.homepage_url && (
         <MyWebView
           uri={selectedStock?.homepage_url}
           isVisible={openWebView}
@@ -236,7 +229,8 @@ export default function StockDetails({
       )}
     </BottomSheetModal>
   );
-}
+};
+
 const styles = StyleSheet.create({
   bottomSheetContent: {
     paddingHorizontal: 10,
@@ -247,80 +241,78 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   bottomSheetHeader: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-    width: "100%",
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    width: '100%',
     paddingBottom: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#323443",
+    borderBottomColor: '#323443',
   },
-  logo: { width: 100, height: 30, marginLeft: 40, resizeMode: "contain" },
+  logo: { width: 100, height: 30, marginLeft: 40, resizeMode: 'contain' },
   stockMainView: {
     gap: 150,
   },
-  stockBody: { width: "100%", gap: 20 },
+  stockBody: { width: '100%', gap: 20 },
   websiteButtonView: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     paddingBottom: 30,
   },
   stockHeaderView: {
-    flexDirection: "row",
+    flexDirection: 'row',
     gap: 15,
-    alignItems: "center",
+    alignItems: 'center',
   },
   stockLogo: { width: 45, height: 45 },
   stockLogoPlaceholder: {
-    justifyContent: "center",
-    alignItems: "center",
-    borderColor: "#323443",
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: '#323443',
     borderWidth: 1,
-    backgroundColor: "#242639",
+    backgroundColor: '#242639',
   },
   logoPlaceholder: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     fontSize: 20,
-    fontWeight: "700",
-    fontFamily: "DMSans-Regular",
+    fontWeight: '700',
+    fontFamily: 'DMSans-Regular',
   },
   ticker: {
     fontSize: 28,
-    fontWeight: "700",
-    fontFamily: "DMSans-Regular",
-    color: "#FFFFFF",
+    fontWeight: '700',
+    fontFamily: 'DMSans-Regular',
+    color: '#FFFFFF',
     lineHeight: 36.46,
   },
   headerText: {
     fontSize: 15,
-    fontWeight: "700",
-    fontFamily: "DMSans-Regular",
+    fontWeight: '700',
+    fontFamily: 'DMSans-Regular',
     lineHeight: 19.53,
   },
   openWebsiteButton: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     height: 50,
-    backgroundColor: "#1F202F",
+    backgroundColor: '#1F202F',
     borderWidth: 0.5,
-    borderColor: "#40AFFF",
+    borderColor: '#40AFFF',
     borderRadius: 25,
-    width: "100%",
-    // Shadow properties for iOS
-    shadowColor: "#40AFFF",
+    width: '100%',
+    shadowColor: '#40AFFF',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 1,
     shadowRadius: 10,
-    // Elevation for Android
     elevation: 10,
   },
   closeButton: {
-    borderColor: "#323443",
+    borderColor: '#323443',
     borderWidth: 1,
-    backgroundColor: "#242639",
+    backgroundColor: '#242639',
     borderRadius: 50,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     width: 40,
     height: 40,
   },
@@ -328,27 +320,29 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingBottom: 20,
     borderBottomWidth: 1,
-    borderBottomColor: "#323443",
+    borderBottomColor: '#323443',
   },
   about: {
-    fontWeight: "400",
+    fontWeight: '400',
     fontSize: 15,
-    fontFamily: "DMSans-Regular",
-    color: "#FFFFFF99",
+    fontFamily: 'DMSans-Regular',
+    color: '#FFFFFF99',
     lineHeight: 18,
-    textAlign: "justify",
+    textAlign: 'justify',
   },
   statisticsView: {
     paddingBottom: 20,
     gap: 15,
     borderBottomWidth: 1,
-    borderBottomColor: "#323443",
+    borderBottomColor: '#323443',
   },
   statisticsTitle: {
-    color: "#FFFFFF99",
+    color: '#FFFFFF99',
     fontSize: 15,
     lineHeight: 19.53,
-    fontWeight: "400",
+    fontWeight: '400',
     height: 25,
   },
 });
+
+export default StockDetails;
