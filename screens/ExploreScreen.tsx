@@ -118,6 +118,7 @@ const ExploreScreen: React.FC<ExploreScreenProps> = ({ navigation }) => {
       <View style={styles.container}>
         <View style={styles.searchContainer}>
           <TextInput
+            testID="stockDetails"
             style={styles.searchInput}
             placeholder="Search for a stock"
             placeholderTextColor="rgba(255,255,255,0.25)"

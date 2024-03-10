@@ -18,13 +18,16 @@ const SplashScreen: React.FC<Props> = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Image
+        testID="logoImage"
         source={require('../assets/nasdaq-logo.png')}
         style={styles.logo}
         resizeMode="contain"
       />
       <View style={styles.developerContainer}>
         <Text style={styles.developerName}>By</Text>
-        <Text style={styles.developerName}>Sandra Hnaidy</Text>
+        <Text style={styles.developerName} testID="byText">
+          Sandra Hnaidy
+        </Text>
       </View>
     </View>
   );
