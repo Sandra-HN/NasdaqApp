@@ -66,7 +66,6 @@ const ExploreScreen: React.FC<ExploreScreenProps> = ({ navigation }) => {
 
   const selectedStock = useMemo(() => {
     if (selectedStockData && selectedStockAggsData) {
-      debugger;
       let aggs = selectedStockAggsData;
 
       if (selectedStockData.status === 'OK') {

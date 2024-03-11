@@ -1,6 +1,7 @@
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import React, { RefObject, useState } from 'react';
 import {
+  ActivityIndicator,
   Image,
   ScrollView,
   StyleSheet,
@@ -66,67 +67,68 @@ const StockDetails: React.FC<StockDetailsProps> = ({
       enableContentPanningGesture={false}
     >
       <View style={styles.bottomSheetContent}>
-        <ScrollView style={styles.bottomSheetContainer}>
-          {selectedStock && (
+        {/* header */}
+        <View style={styles.bottomSheetHeader}>
+          <View style={styles.stockHeaderView}>
+            {selectedStock?.branding?.icon_url ? (
+              <Image
+                source={{
+                  uri: `${selectedStock?.branding.icon_url}?apiKey=${process.env.EXPO_PUBLIC_API_KEY}`,
+                }}
+                style={styles.stockLogo}
+              />
+            ) : (
+              <View style={[styles.stockLogo, styles.stockLogoPlaceholder]}>
+                <Text style={styles.logoPlaceholder}>
+                  {selectedStock?.ticker.slice(0, 2)}
+                </Text>
+              </View>
+            )}
+            <View style={{ flexDirection: 'column' }}>
+              <Text style={styles.ticker}>{selectedStock?.ticker}</Text>
+              <View style={{ flexDirection: 'row', gap: 5 }}>
+                <Text style={[{ color: '#FFFFFF' }, styles.headerText]}>
+                  {currency_symbol}
+                  {selectedStock?.aggs?.c?.toFixed(2)}
+                </Text>
+                <Text
+                  style={[
+                    {
+                      color: selectedStock?.priceChangePercentage
+                        ? selectedStock?.priceChangePercentage > 0
+                          ? '#22FF95'
+                          : selectedStock?.priceChangePercentage < 0
+                          ? '#ff4270'
+                          : '#aaaaaa'
+                        : '#aaaaaa',
+                    },
+                    styles.headerText,
+                  ]}
+                >
+                  {selectedStock?.priceChangePercentage &&
+                    `${selectedStock?.priceChangePercentage}%`}
+                </Text>
+              </View>
+            </View>
+          </View>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={handleCloseModal}
+          >
+            <Image
+              source={require('../../assets/close.png')}
+              style={{ width: 10, height: 10 }}
+            />
+          </TouchableOpacity>
+        </View>
+        {!selectedStock ? (
+          <ActivityIndicator size="large" color="#323443" style={{ flex: 1 }} />
+        ) : (
+          <ScrollView style={styles.bottomSheetContainer}>
             <View style={styles.stockMainView}>
               <View style={styles.stockBody}>
-                {/* header */}
-                <View style={styles.bottomSheetHeader}>
-                  <View style={styles.stockHeaderView}>
-                    {selectedStock?.branding?.icon_url ? (
-                      <Image
-                        source={{
-                          uri: `${selectedStock.branding.icon_url}?apiKey=${process.env.EXPO_PUBLIC_API_KEY}`,
-                        }}
-                        style={styles.stockLogo}
-                      />
-                    ) : (
-                      <View
-                        style={[styles.stockLogo, styles.stockLogoPlaceholder]}
-                      >
-                        <Text style={styles.logoPlaceholder}>
-                          {selectedStock.ticker.slice(0, 2)}
-                        </Text>
-                      </View>
-                    )}
-                    <View style={{ flexDirection: 'column' }}>
-                      <Text style={styles.ticker}>{selectedStock.ticker}</Text>
-                      <View style={{ flexDirection: 'row', gap: 5 }}>
-                        <Text style={[{ color: '#FFFFFF' }, styles.headerText]}>
-                          {currency_symbol}
-                          {selectedStock?.aggs?.c?.toFixed(2)}
-                        </Text>
-                        <Text
-                          style={[
-                            {
-                              color:
-                                selectedStock?.priceChangePercentage &&
-                                selectedStock?.priceChangePercentage > 0
-                                  ? '#22FF95'
-                                  : selectedStock?.priceChangePercentage < 0
-                                  ? '#ff4270'
-                                  : '#aaaaaa',
-                            },
-                            styles.headerText,
-                          ]}
-                        >
-                          {selectedStock?.priceChangePercentage}%
-                        </Text>
-                      </View>
-                    </View>
-                  </View>
-                  <TouchableOpacity
-                    style={styles.closeButton}
-                    onPress={handleCloseModal}
-                  >
-                    <Image
-                      source={require('../../assets/close.png')}
-                      style={{ width: 10, height: 10 }}
-                    />
-                  </TouchableOpacity>
-                </View>
                 {/* body */}
-                {selectedStock.description && (
+                {selectedStock?.description && (
                   <View style={styles.bodyView}>
                     <Text
                       style={[
@@ -137,7 +139,7 @@ const StockDetails: React.FC<StockDetailsProps> = ({
                       ABOUT
                     </Text>
                     <Text style={styles.about}>
-                      {selectedStock.description}
+                      {selectedStock?.description}
                     </Text>
                   </View>
                 )}
@@ -217,8 +219,8 @@ const StockDetails: React.FC<StockDetailsProps> = ({
                 </View>
               )}
             </View>
-          )}
-        </ScrollView>
+          </ScrollView>
+        )}
       </View>
       {selectedStock?.homepage_url && (
         <MyWebView
@@ -245,6 +247,8 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'space-between',
     width: '100%',
+    paddingHorizontal: 10,
+    paddingTop: 10,
     paddingBottom: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#323443',
