@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Modal, View, Image, TouchableOpacity } from 'react-native';
+import { Modal, TouchableOpacity, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 
 interface MyWebViewProps {

@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "NasdaqApp",
-    "slug": "NasdaqApp",
+    "name": "Nasdaq App",
+    "slug": "nasdaq-app",
+    "description": "This is showcase typescript react native app with navigation and bottom sheet and webview",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -21,13 +22,25 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.sandrahnaidy.nasdaqapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "4f2b546e-7ea5-4f07-98f5-6396ca3bccdf"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/4f2b546e-7ea5-4f07-98f5-6396ca3bccdf"
+    }
   }
 }
